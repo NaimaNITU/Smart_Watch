@@ -46,7 +46,7 @@ function bandColor(color) {
   }
 }
 
-// like previous doing it by function
+// like previous doing it by function for wrist size
 function selectWristSize(size) {
   // console.log(size);
   const sizes = ["S", "M", "L", "XL"];
@@ -73,6 +73,7 @@ for (let quantityBtn of quantityBtns) {
     PreviousQuantity.innerText = newQuantity;
   });
 } */
+// quantity
 const quantityBtns = document.querySelectorAll(".quantity-button");
 for (let quantityBtn of quantityBtns) {
   quantityBtn.addEventListener("click", function (event) {
@@ -102,6 +103,7 @@ for (let btn of quantityElements) {
 
 //checkout btn
 let cartCount = 0;
+let cartItems = [];
 const checkOutContainer = document.getElementById("checkout-container");
 // const cartCount = document.getElementById("cart-count");
 const addToCartBtn = document.getElementById("add-to-cart");
@@ -114,12 +116,71 @@ addToCartBtn.addEventListener("click", function () {
     checkOutContainer.classList.remove("hidden");
     cartCount = cartCount + quantity;
     document.getElementById("cart-count").innerText = cartCount;
+
+    // now to show data dynamically in modal
+    // selected band color btn for watch
+    const bandColorBtn = document.querySelector("button.ringBtnBorder.w-6");
+    // then for modal we need to select color
+    const bandColor = bandColorBtn.id.split("-")[0];
+    // now band img
+    const bandImg = bandColor + ".png";
+    // then for modal we need to select wrist size
+    const wristSizeBtn = document.querySelector(
+      "button.ringBtnBorder:not(.w-6)"
+    );
+    // now wristSize id="size-M"
+    const wristSize = wristSizeBtn.id.split("-")[1];
+    // now we need to get price based on wrist size  M $79
+    const wristSizePrice = wristSizeBtn.innerText.split(" ")[1].split("$")[1];
+
+    // now push in the array by making object
+    cartItems.push({
+      image: bandImg,
+      title: "Classy Modern Smart Watch",
+      color: bandColor,
+      size: wristSize,
+      quantity: quantity,
+      price: quantity * parseInt(wristSizePrice),
+    });
+    // console.log(cartItems);
   } else {
     alert("Please select a quantity!");
   }
 });
 
-/* const checkOutBtn = document.getElementById("checkout-btn");
-checkOutBtn.addEventListener("click", function () {
-  const PreviousCartCount = document.getElementById("cart-count").innerText;
-}); */
+document.getElementById("checkout-btn").addEventListener("click", function () {
+  const productBase = "./assets/";
+  document.getElementById("cart-modal").classList.remove("hidden");
+  const cartItemsContainer = document.getElementById("cart-items");
+  // console.log(cartItemsContainer);
+  for (const cartItem of cartItems) {
+    const tr = document.createElement("tr");
+    const styles = ["text-left", "border-b"];
+    tr.classList.add(...styles);
+    tr.innerHTML = `
+    
+     <td class="py-2">
+      <div class="flex gap-3 items-center mr-10">
+        <img class="h-12 w-12 object-cover rounded-md" src="${productBase}${cartItem.image}" alt=""/>
+        <h1 class="font-semibold">${cartItem.title}</h1>
+      </div>
+    </td>
+    <td class="px-4">${cartItem.color}</td>
+    <td class="px-4">${cartItem.size}</td>
+    <td class="px-4">${cartItem.quantity}</td>
+    <td class="px-4">$${cartItem.price}</td>
+
+
+    `;
+    cartItemsContainer.appendChild(tr);
+  }
+});
+
+document
+  .getElementById("continue-shopping")
+  .addEventListener("click", function () {
+    document.getElementById("cart-modal").classList.add("hidden");
+  });
+document.getElementById("checkout").addEventListener("click", function () {
+  alert("Proceeding ...................")
+});
