@@ -158,7 +158,7 @@ document.getElementById("checkout-btn").addEventListener("click", function () {
     const styles = ["text-left", "border-b"];
     tr.classList.add(...styles);
     tr.innerHTML = `
-    
+
      <td class="py-2">
       <div class="flex gap-3 items-center mr-10">
         <img class="h-12 w-12 object-cover rounded-md" src="${productBase}${cartItem.image}" alt=""/>
@@ -169,11 +169,24 @@ document.getElementById("checkout-btn").addEventListener("click", function () {
     <td class="px-4">${cartItem.size}</td>
     <td class="px-4">${cartItem.quantity}</td>
     <td class="px-4">$${cartItem.price}</td>
-
-
     `;
     cartItemsContainer.appendChild(tr);
   }
+
+  // now to add total in modal table
+  let totalQuantity = 0;
+  let totalPrice = 0;
+  for (let item of cartItems) {
+    totalQuantity += item.quantity;
+    totalPrice += item.price;
+  }
+  const tr2 = document.createElement("tr");
+  tr2.innerHTML = `
+  <td colspan="3" class="font-semibold">Total</td>
+  <td class="px-4">${totalQuantity}</td>
+  <td class="px-4">$${totalPrice}</td>
+  `;
+  cartItemsContainer.appendChild(tr2);
 });
 
 document
@@ -182,5 +195,5 @@ document
     document.getElementById("cart-modal").classList.add("hidden");
   });
 document.getElementById("checkout").addEventListener("click", function () {
-  alert("Proceeding ...................")
+  alert("Proceeding ...................");
 });
